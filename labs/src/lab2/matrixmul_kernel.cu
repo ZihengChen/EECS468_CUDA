@@ -54,7 +54,7 @@
 
 // with shared memory
 
-__global__ void MatrixMulKernel(Matrix M, Matrix N, Matrix P)
+__global__ void MatrixMulKernel_SharedMemory(Matrix M, Matrix N, Matrix P)
 {   
     const int TILEWIDTH = 32;
     const int SUMWIDTH  = M.width;
@@ -109,7 +109,7 @@ __global__ void MatrixMulKernel(Matrix M, Matrix N, Matrix P)
 }    
 
 
-/*
+
 // without shared mamory
 __global__ void MatrixMulKernel(Matrix M, Matrix N, Matrix P)
 {   
@@ -135,6 +135,6 @@ __global__ void MatrixMulKernel(Matrix M, Matrix N, Matrix P)
         P.elements[ Row * P.width + Col ] = Pelement;
     }   
 }
-*/
+
 
 #endif // #ifndef _MATRIXMUL_KERNEL_H_

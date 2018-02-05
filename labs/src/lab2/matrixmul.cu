@@ -81,11 +81,11 @@ int main(int argc, char** argv) {
 	if(argc != 5 && argc != 4) 
 	{
 		// Allocate and initialize the matrices
-		M  = AllocateMatrix(rand() %16384, rand() % 16384, 1);
-		N  = AllocateMatrix(M.width, rand() % 16384, 1);
+		//M  = AllocateMatrix(rand() %1024, rand() % 1024, 1);
+		//N  = AllocateMatrix(M.width, rand() % 1024, 1);
 
-		//M  = AllocateMatrix(16, 129, 1);
-		//N  = AllocateMatrix(M.width, 33, 1);
+		M  = AllocateMatrix(1024, 4096, 1);
+		N  = AllocateMatrix(M.width, 1024, 1);
 
 		P  = AllocateMatrix(M.height, N.width, 0);
 	}
@@ -111,16 +111,29 @@ int main(int argc, char** argv) {
 			return 1;
 		}
 	}
+	printf("M hight-width = %d - %d \n",M.height,M.width);
+	printf("N hight-width = %d - %d \n",N.height,N.width);
 
+
+	printf("start running \n");
+	clock_t t1,t2;
+	float run_time;
+	
 	// M * N on the device
+	t1=clock();
 	MatrixMulOnDevice(M, N, P);
+	t2=clock();
+	run_time=((float)t2-(float)t1);
     
-	printf("GPU computation complete\n");
+	printf("GPU computation complete, time={%f}\n",run_time/ CLOCKS_PER_SEC);
+
 	// compute the matrix multiplication on the CPU for comparison
+	t1=clock();
 	Matrix reference = AllocateMatrix(P.height, P.width, 0);
 	computeGold(reference.elements, M.elements, N.elements, M.height, M.width, N.width);
-        
-	printf("CPU computation complete\n");
+    t2=clock();
+	run_time=((float)t2-(float)t1);
+	printf("CPU computation complete, time={%f}\n",run_time/ CLOCKS_PER_SEC);
 	// in this case check if the result is equivalent to the expected soluion
 	CUTBoolean res = cutComparefe(reference.elements, P.elements, P.height*P.width, 0.001f);
 	printf("Test %s\n", (1 == res) ? "PASSED" : "FAILED");
@@ -168,7 +181,8 @@ void MatrixMulOnDevice(const Matrix M, const Matrix N, Matrix P)
 	dim3 dimBlock(TILEWIDTH, TILEWIDTH, 1);
 
 	// Launch the device computation threads!
-	MatrixMulKernel<<<dimGrid,dimBlock>>>(Md, Nd, Pd);
+	// MatrixMulKernel<<<dimGrid,dimBlock>>>(Md, Nd, Pd);
+	MatrixMulKernel_SharedMemory <<<dimGrid,dimBlock>>> (Md, Nd, Pd);
 
 	// Read P from the device
 	CopyFromDeviceMatrix(P, Pd); 
