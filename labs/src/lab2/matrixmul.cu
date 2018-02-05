@@ -81,8 +81,8 @@ int main(int argc, char** argv) {
 	if(argc != 5 && argc != 4) 
 	{
 		// Allocate and initialize the matrices
-		M  = AllocateMatrix(rand() % 1024, rand() % 1024, 1);
-		N  = AllocateMatrix(M.width, rand() % 1024, 1);
+		M  = AllocateMatrix(rand() %16384, rand() % 16384, 1);
+		N  = AllocateMatrix(M.width, rand() % 16384, 1);
 
 		//M  = AllocateMatrix(16, 129, 1);
 		//N  = AllocateMatrix(M.width, 33, 1);
@@ -157,7 +157,7 @@ void MatrixMulOnDevice(const Matrix M, const Matrix N, Matrix P)
 	CopyToDeviceMatrix(Pd, P); // Clear memory
 
 	// Setup the execution configuration
-	int TILEWIDTH = 16;
+	int TILEWIDTH = 32;
 	int GRID_DIM_X = int(Nd.width /TILEWIDTH);
 	int GRID_DIM_Y = int(Md.height/TILEWIDTH);
 	

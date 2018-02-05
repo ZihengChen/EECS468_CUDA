@@ -56,7 +56,7 @@
 
 __global__ void MatrixMulKernel(Matrix M, Matrix N, Matrix P)
 {   
-    const int TILEWIDTH = 16;
+    const int TILEWIDTH = 32;
     const int SUMWIDTH  = M.width;
 
     int Col = blockDim.x * blockIdx.x + threadIdx.x;
