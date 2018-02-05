@@ -1,3 +1,8 @@
-*DS_Store
-.gitignorei
-*.o
+/*DS_Store
+/*/*DS_Store
+/*/*/*DS_Store
+/*/*/*/*DS_Store
+/.gitignorei
+/*/*.o
+/*/*/*.o
+/*/*/*/*.o
