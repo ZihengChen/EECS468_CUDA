@@ -29,6 +29,10 @@ ifdef cuda-install
 	CUDA_INSTALL_PATH := $(cuda-install)
 endif
 
+ifdef CUDA_HOME
+	CUDA_INSTALL_PATH := $(CUDA_HOME)
+endif
+
 # detect OS
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
 OSLOWER = $(shell uname -s 2>/dev/null | tr [:upper:] [:lower:])
